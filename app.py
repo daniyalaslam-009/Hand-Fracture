@@ -1,6 +1,30 @@
 import streamlit as st
 from ultralytics import YOLO
 from PIL import Image
+
+# ✅ Must be placed before ANY other Streamlit function
+st.set_page_config(
+    page_title="Hand Fracture Detection",
+    page_icon="🩻",
+    layout="wide"
+)
+
+st.title("🩻 Hand Fracture Detection")
+
+model = YOLO("best.pt")
+
+uploaded_file = st.file_uploader("Upload an X-ray image", type=["jpg", "jpeg", "png"])
+
+if uploaded_file:
+    image = Image.open(uploaded_file)
+    st.image(image, caption="Uploaded X-ray", use_column_width=True)
+
+    results = model.predict(image, conf=0.5)
+    st.image(results[0].plot(), caption="Detection Result", use_column_width=True)
+
+import streamlit as st
+from ultralytics import YOLO
+from PIL import Image
 import tempfile
 import os
 import numpy as np
