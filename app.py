@@ -1,3 +1,12 @@
+import os, streamlit as st
+
+if not os.path.exists("best.pt"):
+    st.error("⚠️ Model file 'best.pt' not found in app directory.")
+else:
+    from ultralytics import YOLO
+    model = YOLO("best.pt")
+    st.success("✅ Model loaded successfully!")
+
 import streamlit as st
 from ultralytics import YOLO
 from PIL import Image
