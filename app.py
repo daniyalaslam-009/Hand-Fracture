@@ -1,50 +1,3 @@
-import os, streamlit as st
-
-if not os.path.exists("best.pt"):
-    st.error("⚠️ Model file not found in app directory.")
-else:
-    try:
-        from ultralytics import YOLO
-        model = YOLO("best.pt")
-        st.success("✅ Model loaded successfully!")
-    except Exception as e:
-        st.exception(e)
-
-
-
-import os, streamlit as st
-
-if not os.path.exists("best.pt"):
-    st.error("⚠️ Model file 'best.pt' not found in app directory.")
-else:
-    from ultralytics import YOLO
-    model = YOLO("best.pt")
-    st.success("✅ Model loaded successfully!")
-
-import streamlit as st
-from ultralytics import YOLO
-from PIL import Image
-
-# ✅ Must be placed before ANY other Streamlit function
-st.set_page_config(
-    page_title="Hand Fracture Detection",
-    page_icon="🩻",
-    layout="wide"
-)
-
-st.title("🩻 Hand Fracture Detection")
-
-model = YOLO("best.pt")
-
-uploaded_file = st.file_uploader("Upload an X-ray image", type=["jpg", "jpeg", "png"])
-
-if uploaded_file:
-    image = Image.open(uploaded_file)
-    st.image(image, caption="Uploaded X-ray", use_column_width=True)
-
-    results = model.predict(image, conf=0.5)
-    st.image(results[0].plot(), caption="Detection Result", use_column_width=True)
-
 import streamlit as st
 from ultralytics import YOLO
 from PIL import Image
@@ -187,8 +140,22 @@ def load_model():
 try:
     model = load_model()
     model_loaded = True
+except AttributeError as e:
+    st.error("""
+    ❌ **Model Version Incompatibility**
+    
+    Your model was trained with a different YOLOv8 version. Try:
+    1. Run: `pip install --upgrade ultralytics torch`
+    2. Or re-export your model to ONNX format
+    
+    Error details: Model architecture mismatch
+    """)
+    model_loaded = False
+except FileNotFoundError:
+    st.error("❌ Model file 'best.pt' not found. Please upload it to the app directory.")
+    model_loaded = False
 except Exception as e:
-    st.error(f"❌ Error loading model: {e}")
+    st.error(f"❌ Error loading model: {str(e)[:100]}")
     model_loaded = False
 
 # --- Sidebar Info ---
