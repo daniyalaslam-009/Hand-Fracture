@@ -7,6 +7,38 @@ import numpy as np
 import cv2
 from datetime import datetime
 
+# MUST be the first Streamlit command (no st.* before this)
+st.set_page_config(page_title="Hand Fracture Detection", page_icon="🩻", layout="wide")
+
+# --- Custom CSS for styling ---
+st.markdown("""
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+    
+    * {
+        font-family: 'Poppins', sans-serif;
+    }
+    
+    .main {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+    }
+    ...
+    </style>
+""", unsafe_allow_html=True)
+
+import streamlit as st
+from ultralytics import YOLO
+from PIL import Image
+import tempfile
+import os
+import numpy as np
+import cv2
+from datetime import datetime
+
+# MUST be the first Streamlit call in the script
+st.set_page_config(page_title="Hand Fracture Detection", page_icon="🩻", layout="wide")
+
 # --- Custom CSS for styling ---
 st.markdown("""
     <style>
